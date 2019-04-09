@@ -3,6 +3,24 @@
   word-wrap: break-word;
 }
 
+body {
+  /* background-image: url(../img/img1.gif);
+  background-size: cover
+  color: red; */
+}
+
 button {
   margin: 10px;
+}
+
+input {
+  background-image: url(../img/img1.gif);
+  background-size: cover;
+}
+
+label {
+  background-image: url(../img/img1.gif);
+  background-size: cover;
+  color: red;
+  font-size: 30px;
 }

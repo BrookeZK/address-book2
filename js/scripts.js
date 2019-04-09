@@ -132,17 +132,16 @@ function resetForm() {
 
 function whichAddressBook(submitType) {
   if (submitType == "option1") {
-    submitType = addressBook1
-    return submitType
-    console.log(submitType);
+    return addressBook1
+
   } else if (submitType == "option2") {
      return addressBook2
-     console.log(submitType);
+
    } else if (submitType == "option3") {
      return addressBook3
-     console.log(submitType);
+
    } else {
-     console.log("breakie")
+
    }
 };
 
@@ -165,9 +164,6 @@ $(document).ready(function() {
   $("form#new-contact").submit(function(event) {
     event.preventDefault();
     var submitType = $("input:radio[name=exampleRadios]:checked").val();
-
-    console.log("alert");
-    console.log(submitType);
     var inputtedFirstName = $("input#new-first-name").val();
     var inputtedLastName = $("input#new-last-name").val();
     var inputtedPhoneNumber = $("input#new-phone-number").val();
@@ -179,9 +175,27 @@ $(document).ready(function() {
     resetForm();
     var newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmailAddress, addressObject);
     var addressBook = whichAddressBook(submitType);
-    console.log(addressBook);
     addressBook.addContact(newContact);
     displayContactDetails(addressBook);
-    console.log(addressObject);
-  })
+  });
+
+  $("#personal").click(function(event){
+    event.preventDefault();
+    displayContactDetails(addressBook1);
+    showContact(this.id);
+    $('body').css("background-image", "url(img/img2.gif)");
+  });
+
+  $("#work").click(function(event){
+    event.preventDefault();
+    displayContactDetails(addressBook2);
+    $("body").css("background-image", "url(img/img3.gif)");
+  });
+
+  $("#other").click(function(event){
+    event.preventDefault();
+    displayContactDetails(addressBook3);
+    $("body").css("background-image", "url(img/img4.gif)");
+  });
+
 })

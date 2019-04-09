@@ -66,7 +66,9 @@ Contact.prototype.fullName = function() {
 }
 
 // User Interface Logic ---------
-var addressBook = new AddressBook();
+var addressBook1 = new AddressBook();
+var addressBook2 = new AddressBook();
+var addressBook3 = new AddressBook();
 
 function displayContactDetails(addressBookToDisplay) {
   var contactsList = $("ul#contacts");
@@ -79,7 +81,7 @@ function displayContactDetails(addressBookToDisplay) {
 
 function showContact(contactId) {
   var contact = addressBook.findContact(contactId);
-  $("#show-contact").show();
+  $("#show-contact").fadeToggle();
   $(".first-name").html(contact.firstName);
   $(".last-name").html(contact.lastName);
   $(".phone-number").html(contact.phoneNumber);
@@ -116,8 +118,46 @@ function attachContactListeners() {
   });
 };
 
+function resetForm() {
+  $("input#new-first-name").val("");
+  $("input#new-last-name").val("");
+  $("input#new-phone-number").val("");
+  $("input#new-email-address").val("");
+  $("input#new-address").val("");
+  $("input#new-address-home").val("");
+  $("input#new-address-work").val("");
+  $("input#new-address-other").val("");
+
+  };
+
+function whichAddressBook() {
+  if ($_POST['personal_button'] == "personal") {
+    return addressBook1
+  } else if ($_POST['work_button'] == "work") {
+     return addressBook2
+   } else if ($_POST['school_button'] == "school") {
+     return addressBook3
+   } else {
+     console.log("breakie")
+   }
+};
+
+// Keyup Keydown experiment
+
+function experiment() {
+  $("input").keydown(function(){
+  $("input").css("background-color", "yellow");
+  $("input").css("color", "#42f4e5");
+});
+$("input").keyup(function(){
+  $("input").css("background-color", "pink");
+  $("input").css("color", "hotpink");
+});
+}
+
 $(document).ready(function() {
   attachContactListeners();
+  experiment();
   $("form#new-contact").submit(function(event) {
     event.preventDefault();
     var inputtedFirstName = $("input#new-first-name").val();
@@ -128,15 +168,9 @@ $(document).ready(function() {
     var workAddress = $("input#new-address-work").val();
     var otherAddress = $("input#new-address-other").val();
     var addressObject = {homeAddress, workAddress, otherAddress};
-    $("input#new-first-name").val("");
-    $("input#new-last-name").val("");
-    $("input#new-phone-number").val("");
-    $("input#new-email-address").val("");
-    $("input#new-address").val("");
-    $("input#new-address-home").val("");
-    $("input#new-address-work").val("");
-    $("input#new-address-other").val("");
+    resetForm();
     var newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmailAddress, addressObject);
+    var addressBook = whichAddressBook()
     addressBook.addContact(newContact);
     displayContactDetails(addressBook);
     console.log(addressObject);

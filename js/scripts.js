@@ -1,59 +1,144 @@
-// Business Interface Logic
-
-// Business Logic for AddressBook. First creating a global varable and saving Contacts inside of it. The empty array called contacts is a single property where we will store entries in our address book. Each time a new AddressBook is created, it will have a currentId property that begins at 0.
-
+// Business Logic for AddressBook ---------
 function AddressBook() {
   this.contacts = [],
   this.currentId = 0
 }
 
-// The addContact method takes a Contact object as an argument. It uses push() to add the Contact provided as aan argument to the AddressBook's contacts array property
-
-AddressBook.prototype.addContact = function(contact) {
-  this.contacts.push(contact);
-}
-
-// This new method of .assignId will increment the property this.currentId on the AddressBook object by 1 and return the updated value. This mimics a database by creating sequentially incrementing ID values which are never repeated.
-
-AddressBook.prototype.assignId = function() {
-  this.currentId += 1;
-  return this.currentId;
-}
+// function AddressLog() {
+//   this.addresses = [];
+// }
+//
+// AddressLog.prototype.addAddress = function(address) {
+//   this.addresses.push(address)
+// }
 
 AddressBook.prototype.addContact = function(contact) {
   contact.id = this.assignId();
   this.contacts.push(contact);
 }
 
-AddressBook.prototype.findContact = function (id) {
-  for (var i=0; i < this.contacts.length; i++) {
+
+AddressBook.prototype.assignId = function() {
+  this.currentId += 1;
+  return this.currentId;
+}
+
+AddressBook.prototype.findContact = function(id) {
+  for (var i=0; i< this.contacts.length; i++) {
     if (this.contacts[i]) {
       if (this.contacts[i].id == id) {
         return this.contacts[i];
+      }
     }
-   }
   };
   return false;
 }
 
-AddressBook.prototype.deleteContact = function (id) {
+AddressBook.prototype.deleteContact = function(id) {
   for (var i=0; i< this.contacts.length; i++) {
     if (this.contacts[i]) {
-      if (this.contacts[i].id ==id) {
+      if (this.contacts[i].id == id) {
         delete this.contacts[i];
         return true;
+      }
     }
-   }
   };
   return false;
 }
-// Business Logic for Contacts
-function Contact(firstName, lastName, phoneNumber) {
-  this.firstName = firstName;
-  this.lastName = lastName;
-  this.phoneNumber = phoneNumber;
+
+// Business Logic for Contacts ---------
+function Contact(firstName, lastName, phoneNumber, emailAddress, addressObject) {
+  this.firstName = firstName,
+  this.lastName = lastName,
+  this.phoneNumber = phoneNumber,
+  this.emailAddress = emailAddress,
+  this.addressObject = addressObject
 }
 
-Contact.prototype.fullName = function () {
+// function Address(workAddress, homeAddress, otherAddress) {
+//   this.workAddress = workAddress,
+//   this.homeAddress = homeAddress,
+//   this.otherAddress = otherAddress
+// }
+
+Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 }
+
+// User Interface Logic ---------
+var addressBook = new AddressBook();
+
+function displayContactDetails(addressBookToDisplay) {
+  var contactsList = $("ul#contacts");
+  var htmlForContactInfo = "";
+  addressBookToDisplay.contacts.forEach(function(contact) {
+    htmlForContactInfo += "<li id=" + contact.id + ">" + contact.firstName + " " + contact.lastName + "</li>";
+  });
+  contactsList.html(htmlForContactInfo);
+};
+
+function showContact(contactId) {
+  var contact = addressBook.findContact(contactId);
+  $("#show-contact").show();
+  $(".first-name").html(contact.firstName);
+  $(".last-name").html(contact.lastName);
+  $(".phone-number").html(contact.phoneNumber);
+  $(".email-address").html(contact.emailAddress);
+  if (contact.addressObject.homeAddress === "") {
+    $("#one").hide();
+
+  } else {
+    $("#address1").html(contact.addressObject.homeAddress);
+  };
+  if (contact.addressObject.workAddress === "") {
+    $("#two").hide();
+  } else {
+    $("#address2").html(contact.addressObject.workAddress);
+  }
+  if (contact.addressObject.otherAddress === "") {
+    $("#three").hide();
+  } else {
+    $("#address3").html(contact.addressObject.otherAddress);
+  }
+  var buttons = $("#buttons");
+  buttons.empty();
+  buttons.append("<button class='deleteButton' id=" + contact.id + ">Delete</button>");
+}
+
+function attachContactListeners() {
+  $("ul#contacts").on("click", "li", function() {
+    showContact(this.id);
+  });
+  $("#buttons").on("click", ".deleteButton", function() {
+    addressBook.deleteContact(this.id);
+    $("#show-contact").hide();
+    displayContactDetails(addressBook);
+  });
+};
+
+$(document).ready(function() {
+  attachContactListeners();
+  $("form#new-contact").submit(function(event) {
+    event.preventDefault();
+    var inputtedFirstName = $("input#new-first-name").val();
+    var inputtedLastName = $("input#new-last-name").val();
+    var inputtedPhoneNumber = $("input#new-phone-number").val();
+    var inputtedEmailAddress = $("input#new-email-address").val();
+    var homeAddress = $("input#new-address-home").val();
+    var workAddress = $("input#new-address-work").val();
+    var otherAddress = $("input#new-address-other").val();
+    var addressObject = {homeAddress, workAddress, otherAddress};
+    $("input#new-first-name").val("");
+    $("input#new-last-name").val("");
+    $("input#new-phone-number").val("");
+    $("input#new-email-address").val("");
+    $("input#new-address").val("");
+    $("input#new-address-home").val("");
+    $("input#new-address-work").val("");
+    $("input#new-address-other").val("");
+    var newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmailAddress, addressObject);
+    addressBook.addContact(newContact);
+    displayContactDetails(addressBook);
+    console.log(addressObject);
+  })
+})

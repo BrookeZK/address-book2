@@ -44,9 +44,30 @@
               <label for="new-address-other">Other Address</label>
               <input type="text"  class="form-control" id="new-address-other">
             </div>
-            <button type="submit" class="btn-primary" name="personal-button" value="personal">Add to Personal Address Book</button></br>
-            <button type="submit" class="btn-primary" name="work-button" value="work">Add to Personal Work Address Book</button></br>
-            <button type="submit" class="btn-primary" name="school-button" value="school">Add to Personal School Address Book</button>
+
+            <!-- Radio buttons for each address book  -->
+            <div id="radio-form">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="personal" value="option1" checked>
+                <label class="form-check-label" for="exampleRadios1">
+                  Personal
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="work" value="option2">
+                <label class="form-check-label" for="exampleRadios2">
+                  Work
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="other" value="option3">
+                <label class="form-check-label" for="exampleRadios3">
+                  Other
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" name="personal-button" value="personal">Add to Address Book</button>
           </form>
           <hr>
           <h2>Contacts:</h2>

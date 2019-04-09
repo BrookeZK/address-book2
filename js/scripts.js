@@ -80,8 +80,8 @@ function displayContactDetails(addressBookToDisplay) {
 };
 
 function showContact(contactId) {
-  var contact = addressBook.findContact(contactId);
-  $("#show-contact").fadeToggle();
+  var contact = whichAddressBook($("input:radio[name=exampleRadios]:checked").val()).findContact(contactId);
+  $("#show-contact").toggle();
   $(".first-name").html(contact.firstName);
   $(".last-name").html(contact.lastName);
   $(".phone-number").html(contact.phoneNumber);
@@ -130,13 +130,17 @@ function resetForm() {
 
   };
 
-function whichAddressBook() {
-  if ($_POST['personal_button'] == "personal") {
-    return addressBook1
-  } else if ($_POST['work_button'] == "work") {
+function whichAddressBook(submitType) {
+  if (submitType == "option1") {
+    submitType = addressBook1
+    return submitType
+    console.log(submitType);
+  } else if (submitType == "option2") {
      return addressBook2
-   } else if ($_POST['school_button'] == "school") {
+     console.log(submitType);
+   } else if (submitType == "option3") {
      return addressBook3
+     console.log(submitType);
    } else {
      console.log("breakie")
    }
@@ -160,6 +164,10 @@ $(document).ready(function() {
   experiment();
   $("form#new-contact").submit(function(event) {
     event.preventDefault();
+    var submitType = $("input:radio[name=exampleRadios]:checked").val();
+
+    console.log("alert");
+    console.log(submitType);
     var inputtedFirstName = $("input#new-first-name").val();
     var inputtedLastName = $("input#new-last-name").val();
     var inputtedPhoneNumber = $("input#new-phone-number").val();
@@ -170,7 +178,8 @@ $(document).ready(function() {
     var addressObject = {homeAddress, workAddress, otherAddress};
     resetForm();
     var newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmailAddress, addressObject);
-    var addressBook = whichAddressBook()
+    var addressBook = whichAddressBook(submitType);
+    console.log(addressBook);
     addressBook.addContact(newContact);
     displayContactDetails(addressBook);
     console.log(addressObject);
